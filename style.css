@@ -82,6 +82,10 @@ a { color: var(--teal); }
   color: var(--muted);
 }
 .hero h1 { font-size: clamp(2.2rem, 7vw, 3.5rem); }
+.doodle {
+  padding-bottom: .12em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 14' preserveAspectRatio='none'%3E%3Cpath d='M3 9 C 35 3, 70 12, 105 7 S 170 3, 197 8' fill='none' stroke='%23C67139' stroke-width='4' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") left bottom / 100% .28em no-repeat;
+}
 .subtitle { margin: .5rem 0 0; font-size: clamp(1rem, 2.4vw, 1.15rem); color: var(--muted); }
 
 main { max-width: 640px; margin: 0 auto; padding: 0 1rem; }
@@ -98,11 +102,25 @@ main { max-width: 640px; margin: 0 auto; padding: 0 1rem; }
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--paper);
+  box-shadow: inset 4px 0 0 var(--accent, var(--sand));
   color: var(--ink);
   text-decoration: none;
   transition: border-color .15s ease, background-color .15s ease;
 }
-.link:hover { border-color: var(--brown); background: #fff; }
+.link:hover { border-color: var(--accent, var(--brown)); background: var(--tint, #fff); }
+.link:hover img { animation: wiggle .5s ease-in-out; }
+
+.link-brown { --accent: #BD9573; --tint: #F3E6D8; }
+.link-sky   { --accent: #A9CFDA; --tint: #E6F2F5; }
+.link-sand  { --accent: #CDB894; --tint: #F1E8D8; }
+.link-peach { --accent: #F2B596; --tint: #FFEEE4; }
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-9deg); }
+  50% { transform: rotate(7deg); }
+  75% { transform: rotate(-3deg); }
+}
 .link:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
 
 .link img { width: 44px; height: 44px; object-fit: contain; flex-shrink: 0; }
@@ -113,7 +131,7 @@ main { max-width: 640px; margin: 0 auto; padding: 0 1rem; }
 .link:hover .arrow { color: var(--brown-dark); transform: translateX(2px); }
 
 /* Primary link */
-.link-rust { background: var(--brown-dark); border-color: var(--brown-dark); }
+.link-rust { background: var(--brown-dark); border-color: var(--brown-dark); box-shadow: none; }
 .link-rust:hover { background: var(--brown); border-color: var(--brown); }
 .link-rust .link-text strong { color: var(--cream); }
 .link-rust .link-text small, .link-rust .arrow, .link-rust:hover .arrow { color: rgba(245, 234, 216, .75); }
@@ -124,7 +142,29 @@ main { max-width: 640px; margin: 0 auto; padding: 0 1rem; }
   padding: 2.5rem 0 2rem;
 }
 .about-inner { display: flex; align-items: center; gap: 2rem; }
-.about h2 { font-size: clamp(1.7rem, 4.5vw, 2.1rem); margin-bottom: .6rem; }
+.about h2 {
+  position: relative;
+  display: inline-block;
+  font-size: clamp(1.5rem, 4vw, 1.8rem);
+  margin-bottom: 1rem;
+  padding: .45rem 1rem .5rem;
+  background: var(--paper);
+  border: 2px solid var(--brown-dark);
+  border-radius: 18px;
+}
+/* speech bubble tail, pointing at the waving capybara */
+.about h2::after {
+  content: "";
+  position: absolute;
+  right: -9px;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  background: var(--paper);
+  border-top: 2px solid var(--brown-dark);
+  border-right: 2px solid var(--brown-dark);
+  transform: translateY(-50%) rotate(45deg);
+}
 .about p { margin: 0 0 .8rem; }
 .about p:last-child { margin-bottom: 0; }
 .about em { font-style: normal; font-weight: 600; text-decoration: underline; text-decoration-color: var(--rust); text-underline-offset: 3px; }
@@ -156,7 +196,20 @@ main { max-width: 640px; margin: 0 auto; padding: 0 1rem; }
   grid-template-columns: repeat(3, 1fr);
   gap: 1.1rem .75rem;
 }
-.photos figure { margin: 0; }
+.photos figure { position: relative; margin: 0; }
+.photos .sticker {
+  position: absolute;
+  top: -16px;
+  right: -10px;
+  width: 54px;
+  height: 54px;
+  aspect-ratio: auto;
+  object-fit: contain;
+  border-radius: 0;
+  transform: rotate(12deg);
+  filter: drop-shadow(0 1px 1px rgba(62, 36, 16, .3));
+}
+.photos .sticker-left { right: auto; left: -10px; transform: rotate(-10deg); }
 .photos img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 6px; }
 .photos figcaption { font-size: .85rem; color: var(--muted); padding-top: .4rem; }
 
@@ -182,10 +235,12 @@ main { max-width: 640px; margin: 0 auto; padding: 0 1rem; }
   .photos { grid-template-columns: repeat(2, 1fr); }
   .about-inner { flex-direction: column-reverse; align-items: flex-start; gap: 1rem; }
   .about-capy { width: 100px; }
+  .about h2::after { right: auto; left: 1.5rem; top: -9px; transform: rotate(-45deg); }
   .footer { flex-direction: column; text-align: center; margin-inline: 1rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .link, .arrow { transition: none; }
+  .link:hover img { animation: none; }
 }
